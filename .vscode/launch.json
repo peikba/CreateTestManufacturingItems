@@ -6,7 +6,7 @@
             "type": "al",
             "request": "launch",
             "environmentType": "Sandbox",
-            "environmentName": "Preview",
+            "environmentName": "Sandbox",
             "breakOnError": true,
             "breakOnRecordWrite": false,
             "launchBrowser": true,

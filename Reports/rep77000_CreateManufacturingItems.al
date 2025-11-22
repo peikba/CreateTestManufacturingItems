@@ -59,6 +59,7 @@ report 77000 "BAC Create Manufacturing Item"
     end;
 
     var
+        Item: Record Item;
         OffSetItemNo: Integer;
         AddExtraItems: Boolean;
         RawMatNo: Integer;
@@ -73,7 +74,6 @@ report 77000 "BAC Create Manufacturing Item"
 
     local procedure CreateItems()
     var
-        Item: Record Item;
         Item2: Record Item;
     begin
         lf := 10;
@@ -117,11 +117,6 @@ report 77000 "BAC Create Manufacturing Item"
         RawMatNo += 1;
         OffSetItemNo += 1;
         CreateItem(Format(OffSetItemNo), Item2, StrSubstNo(RawTxt, RawMatNo), Item."Replenishment System"::Purchase, 24);
-        CreatedItems += Item."No." + format(lf);
-
-        RawMatNo += 1;
-        OffSetItemNo += 1;
-        CreateItem(Format(OffSetItemNo), Item2, StrSubstNo(RawTxt, RawMatNo), Item."Replenishment System"::Purchase, 30);
         CreatedItems += Item."No." + format(lf);
     end;
 
@@ -278,14 +273,12 @@ report 77000 "BAC Create Manufacturing Item"
     end;
 
     local procedure CreateItem(inItemNo: Code[20]; Item2: Record Item; inDescription: Text[100]; inReplenishmentSystem: Enum "Replenishment System"; inCost: Decimal)
-    var
-        Item: Record Item;
     begin
         Item.Init;
         Item."No." := Format(OffSetItemNo);
-        Item.Validate("Base Unit of Measure", Item2."Base Unit of Measure");
-        Item.Validate("Gen. Prod. Posting Group", Item2."Gen. Prod. Posting Group");
         Item.Insert;
+        Item.Validate("Gen. Prod. Posting Group", Item2."Gen. Prod. Posting Group");
+        Item.Validate("Base Unit of Measure", Item2."Base Unit of Measure");
         Item.Validate(Description, StrSubstNo(inDescription, Item.TableCaption));
         Item.Validate("Inventory Posting Group", Item2."Inventory Posting Group");
         Item.Validate("Costing Method", Item."Costing Method"::FIFO);
