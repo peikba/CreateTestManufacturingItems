@@ -55,7 +55,7 @@ report 77000 "BAC Create Manufacturing Item"
         CreateWorkCenter('200', 'Machine', 1.3, '');
         CreateWorkCenter('400', 'Packing', 1.1, '');
         CreateItems;
-        Message(DoneTxt,CreatedItems);
+        Message(DoneTxt, CreatedItems);
     end;
 
     var
@@ -77,43 +77,16 @@ report 77000 "BAC Create Manufacturing Item"
         Item2: Record Item;
     begin
         lf := 10;
-        Item.Init;
-        Item."No." := Format(OffSetItemNo);
-        Item.Insert;
-        Item.Validate(Description, StrSubstNo(FinishedTxt, Item.TableCaption));
         Item2.SetRange("Costing Method", item2."Costing Method"::FIFO);
         Item2.FindFirst();
-        Item.Validate("Base Unit of Measure", Item2."Base Unit of Measure");
-        Item.Validate("Gen. Prod. Posting Group", Item2."Gen. Prod. Posting Group");
-        Item.Validate("Inventory Posting Group", Item2."Inventory Posting Group");
-        Item.Validate("Costing Method", Item."Costing Method"::FIFO);
-        Item.Validate("Replenishment System", Item."Replenishment System"::"Prod. Order");
-        Item.Validate("Reordering Policy", Item."Reordering Policy"::"Lot-for-Lot");
-        Item.Validate("Manufacturing Policy", Item."Manufacturing Policy"::"Make-to-Order");
-        Item."Production BOM No." := Item."No.";
-        Item."Routing No." := Item."No.";
-        Item.Modify;
+        CreateItem(Format(OffSetItemNo), Item2, FinishedTxt, Item."Replenishment System"::"Prod. Order", 0);
         CreatedItems := Item."No." + format(lf);
-
         CreateFinishedBom(Item);
         CreateRoutingHeaders(Item);
 
         OffSetItemNo += 1000;
 
-        Item.Init;
-        Item."No." := Format(OffSetItemNo);
-        Item.Insert;
-        Item.Validate(Description, StrSubstNo(SemiTxt, Item.TableCaption));
-        Item.Validate("Base Unit of Measure", Item2."Base Unit of Measure");
-        Item.Validate("Gen. Prod. Posting Group", Item2."Gen. Prod. Posting Group");
-        Item.Validate("Inventory Posting Group", Item2."Inventory Posting Group");
-        Item.Validate("Costing Method", Item."Costing Method"::FIFO);
-        Item.Validate("Replenishment System", Item."Replenishment System"::"Prod. Order");
-        Item.Validate("Reordering Policy", Item."Reordering Policy"::"Lot-for-Lot");
-        Item.Validate("Manufacturing Policy", Item."Manufacturing Policy"::"Make-to-Order");
-        Item."Production BOM No." := Item."No.";
-        Item."Routing No." := Item."No.";
-        Item.Modify;
+        CreateItem(Format(OffSetItemNo), Item2, SemiTxt, Item."Replenishment System"::"Prod. Order", 0);
         CreatedItems += Item."No." + format(lf);
 
         CreateSemiBom(Item);
@@ -121,93 +94,34 @@ report 77000 "BAC Create Manufacturing Item"
 
         RawMatNo := 1;
         OffSetItemNo += 1000 + RawMatNo;
-        Item.Init;
-        Item."No." := Format(OffSetItemNo);
-        Item.Insert;
-        Item.Validate(Description, StrSubstNo(RawTxt, RawMatNo));
-        Item.Validate("Base Unit of Measure", Item2."Base Unit of Measure");
-        Item.Validate("Gen. Prod. Posting Group", Item2."Gen. Prod. Posting Group");
-        Item.Validate("Inventory Posting Group", Item2."Inventory Posting Group");
-        Item.Validate("Costing Method", Item."Costing Method"::FIFO);
-        Item.Validate("Replenishment System", Item."Replenishment System"::Purchase);
-        Item.Validate("Reordering Policy", Item."Reordering Policy"::"Lot-for-Lot");
-        Item.Validate("Unit Cost", 10);
-        Item.Validate("Standard Cost", 10);
-        Item.Modify;
+        CreateItem(Format(OffSetItemNo), Item2, StrSubstNo(RawTxt, RawMatNo), Item."Replenishment System"::Purchase, 10);
         CreatedItems += Item."No." + format(lf);
 
         RawMatNo += 1;
         OffSetItemNo += 1;
-        Item.Init;
-        Item."No." := Format(OffSetItemNo);
-        Item.Insert;
-        Item.Validate(Description, StrSubstNo(RawTxt, RawMatNo));
-        Item.Validate("Base Unit of Measure", Item2."Base Unit of Measure");
-        Item.Validate("Gen. Prod. Posting Group", Item2."Gen. Prod. Posting Group");
-        Item.Validate("Inventory Posting Group", Item2."Inventory Posting Group");
-        Item.Validate("Costing Method", Item."Costing Method"::FIFO);
-        Item.Validate("Replenishment System", Item."Replenishment System"::Purchase);
-        Item.Validate("Reordering Policy", Item."Reordering Policy"::"Lot-for-Lot");
-        Item.Validate("Manufacturing Policy", Item."Manufacturing Policy"::"Make-to-Order");
-        Item.Validate("Unit Cost", 11);
-        Item.Validate("Standard Cost", 11);
-        Item.Modify;
+        CreateItem(Format(OffSetItemNo), Item2, StrSubstNo(RawTxt, RawMatNo), Item."Replenishment System"::Purchase, 11);
         CreatedItems += Item."No." + format(lf);
 
         RawMatNo += 1;
         OffSetItemNo += 1;
-        Item.Init;
-        Item."No." := Format(OffSetItemNo);
-        Item.Insert;
-        Item.Validate(Description, StrSubstNo(RawTxt, RawMatNo));
-        Item.Validate("Base Unit of Measure", Item2."Base Unit of Measure");
-        Item.Validate("Gen. Prod. Posting Group", Item2."Gen. Prod. Posting Group");
-        Item.Validate("Inventory Posting Group", Item2."Inventory Posting Group");
-        Item.Validate("Costing Method", Item."Costing Method"::FIFO);
-        Item.Validate("Replenishment System", Item."Replenishment System"::Purchase);
-        Item.Validate("Reordering Policy", Item."Reordering Policy"::"Lot-for-Lot");
-        Item.Validate("Manufacturing Policy", Item."Manufacturing Policy"::"Make-to-Order");
-        Item.Validate("Unit Cost", 12);
-        Item.Validate("Standard Cost", 12);
-        Item.Modify;
+        CreateItem(Format(OffSetItemNo), Item2, StrSubstNo(RawTxt, RawMatNo), Item."Replenishment System"::Purchase, 12);
         CreatedItems += Item."No." + format(lf);
 
         if not AddExtraItems then
             exit;
         RawMatNo += 1;
         OffSetItemNo += 1;
-        Item.Init;
-        Item."No." := Format(OffSetItemNo);
-        Item.Insert;
-        Item.Validate(Description, StrSubstNo(RawTxt, RawMatNo));
-        Item.Validate("Base Unit of Measure", Item2."Base Unit of Measure");
-        Item.Validate("Gen. Prod. Posting Group", Item2."Gen. Prod. Posting Group");
-        Item.Validate("Inventory Posting Group", Item2."Inventory Posting Group");
-        Item.Validate("Costing Method", Item."Costing Method"::FIFO);
-        Item.Validate("Replenishment System", Item."Replenishment System"::Purchase);
-        Item.Validate("Reordering Policy", Item."Reordering Policy"::"Lot-for-Lot");
-        Item.Validate("Manufacturing Policy", Item."Manufacturing Policy"::"Make-to-Order");
-        Item.Validate("Unit Cost", 16);
-        Item.Validate("Standard Cost", 16);
-        Item.Modify;
+        CreateItem(Format(OffSetItemNo), Item2, StrSubstNo(RawTxt, RawMatNo), Item."Replenishment System"::Purchase, 16);
         CreatedItems += Item."No." + format(lf);
 
         RawMatNo += 1;
         OffSetItemNo += 1;
-        Item.Init;
-        Item."No." := Format(OffSetItemNo);
-        Item.Insert;
-        Item.Validate(Description, StrSubstNo(RawTxt, RawMatNo));
-        Item.Validate("Base Unit of Measure", Item2."Base Unit of Measure");
-        Item.Validate("Gen. Prod. Posting Group", Item2."Gen. Prod. Posting Group");
-        Item.Validate("Inventory Posting Group", Item2."Inventory Posting Group");
-        Item.Validate("Costing Method", Item."Costing Method"::FIFO);
-        Item.Validate("Replenishment System", Item."Replenishment System"::Purchase);
-        Item.Validate("Reordering Policy", Item."Reordering Policy"::"Lot-for-Lot");
-        Item.Validate("Manufacturing Policy", Item."Manufacturing Policy"::"Make-to-Order");
-        Item.Validate("Unit Cost", 24);
-        Item.Validate("Standard Cost", 24);
-        Item.Modify;
+        CreateItem(Format(OffSetItemNo), Item2, StrSubstNo(RawTxt, RawMatNo), Item."Replenishment System"::Purchase, 24);
+        CreatedItems += Item."No." + format(lf);
+
+        RawMatNo += 1;
+        OffSetItemNo += 1;
+        CreateItem(Format(OffSetItemNo), Item2, StrSubstNo(RawTxt, RawMatNo), Item."Replenishment System"::Purchase, 30);
         CreatedItems += Item."No." + format(lf);
     end;
 
@@ -361,6 +275,33 @@ report 77000 "BAC Create Manufacturing Item"
 
         if Item.Get(Format(OffSetItemNo + 2003)) then
             Item.Delete(true);
+    end;
+
+    local procedure CreateItem(inItemNo: Code[20]; Item2: Record Item; inDescription: Text[100]; inReplenishmentSystem: Enum "Replenishment System"; inCost: Decimal)
+    var
+        Item: Record Item;
+    begin
+        Item.Init;
+        Item."No." := Format(OffSetItemNo);
+        Item.Validate("Base Unit of Measure", Item2."Base Unit of Measure");
+        Item.Validate("Gen. Prod. Posting Group", Item2."Gen. Prod. Posting Group");
+        Item.Insert;
+        Item.Validate(Description, StrSubstNo(inDescription, Item.TableCaption));
+        Item.Validate("Inventory Posting Group", Item2."Inventory Posting Group");
+        Item.Validate("Costing Method", Item."Costing Method"::FIFO);
+        Item.Validate("Replenishment System", inReplenishmentSystem);
+        Item.Validate("Reordering Policy", Item."Reordering Policy"::"Lot-for-Lot");
+        if inReplenishmentSystem = Item."Replenishment System"::"Prod. Order" then begin
+            Item.Validate("Manufacturing Policy", Item."Manufacturing Policy"::"Make-to-Order");
+            Item."Production BOM No." := Item."No.";
+            Item."Routing No." := Item."No.";
+        end;
+        if inReplenishmentSystem = Item."Replenishment System"::Purchase then begin
+            Item.Validate("Vendor No.", '10000');
+        end;
+        Item.Validate("Standard Cost", inCost);
+        Item.Validate("Unit Cost", inCost);
+        Item.Modify;
     end;
 
     local procedure CreateWorkCenter(inWorkCenterNo: Code[10]; inWorkCenterName: Text[100]; inCostPrice: Decimal; inSubcontractor: code[20])
